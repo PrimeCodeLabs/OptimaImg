@@ -1,0 +1,15 @@
+[package]
+name = "optimaimg-rust"
+version = "0.1.0"
+authors = ["Your Name <hamsa.a.j@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "optimaimg"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.14", features = ["extension-module"] }
+image = "0.23.14" # For image processing capabilities
+
+# Optional dependencies for other image processing features can be added here
