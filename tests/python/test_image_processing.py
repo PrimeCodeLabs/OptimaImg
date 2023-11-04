@@ -2,7 +2,7 @@
 from pathlib import Path
 import pytest
 from PIL import Image
-from optimaimg import convert_to_grayscale
+from optimaimg import convert_to_grayscale, resize_image
 
 
 # Helper function to create a simple colored image for testing
@@ -37,5 +37,20 @@ def test_convert_to_grayscale(input_image_path, output_image_path):
     output_image = Image.open(output_image_path)
     # Check that the output image is in grayscale mode
     assert output_image.mode == "L", "Output image is not in grayscale mode."
+
+    # Optionally, you can check the pixels of the output image to ensure it has been processed correctly
+
+
+def test_resize_image(input_image_path, output_image_path):
+    # Call the resize_image function with the test paths
+    resize_image(input_image_path, output_image_path, 50, 50)
+
+    # Check if the output file has been created
+    assert Path(output_image_path).is_file(), "Output image file was not created."
+
+    # Open the output image to check its properties
+    output_image = Image.open(output_image_path)
+    # Check that the output image has the expected dimensions
+    assert output_image.size == (50, 50), "Output image has incorrect dimensions."
 
     # Optionally, you can check the pixels of the output image to ensure it has been processed correctly
