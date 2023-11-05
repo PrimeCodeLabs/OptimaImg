@@ -93,11 +93,17 @@ jobs:
         run: |
           source venv/bin/activate
           echo "VIRTUAL_ENV=$(pwd)/venv" >> $GITHUB_ENV
-      - name: Install Poetry
-        run: pip install poetry
-      - name: Install dependencies
-        run: poetry install
-      - name: Build wheels and sdist
-        run: poetry build
-      - name: Publish to PyPI
-        run: poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+      - name: Install maturin
+        run: |
+          pip install --upgrade pip
+          pip install maturin
+      - name: Build wheels with maturin
+        run: python -m maturin build --release --out target/wheels
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: target/wheels/*.whl
+      - name: Publish to PyPI with maturin
+        run: maturin publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
