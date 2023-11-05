@@ -47,10 +47,13 @@ jobs:
           .\venv\Scripts\Activate
           echo "VIRTUAL_ENV=$(pwd)\venv" | Out-String | Set-Content -Path $env:GITHUB_ENV -Encoding utf8
 
-      - name: Install maturin
-        run: pip install pillow pytest maturin==${{ env.MATURIN_VERSION }} pytest
-      - name: Build and install the package
-        run: python -m maturin develop
+      - name: Install dependencies and build the package
+        run: |
+          pip install --upgrade pip
+          pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
+          python -m maturin develop
+          python -m pip list  # List all installed packages to debug
+
       - name: Run tests
         run: python -m pytest
 
