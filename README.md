@@ -24,6 +24,10 @@ Alternatively, if you have cloned the repository and want to install it directly
 poetry install
 ```
 
+## Important Note
+
+**OptimaImg has not been tested on Windows OS and may not perform as expected on that platform.**
+
 ## Usage
 
 After installing the package, you can use it to perform various image processing tasks:
@@ -57,6 +61,20 @@ height = 100 # desired height
 # Resize the image and save it
 resize_image(input_path, output_path, width, height)
 ```
+
+## Benchmarks
+
+Below is a performance comparison table for converting images to grayscale using OptimaImg, Pillow, and OpenCV. The times are measured in seconds and represent the average duration taken to convert a single image across multiple runs.
+
+| Library   | Average Conversion Time (seconds) |
+| --------- | --------------------------------- |
+| Pillow    | ~0.20                             |
+| OptimaImg | ~0.03                             |
+| OpenCV    | ~0.03                             |
+
+These benchmarks indicate that OptimaImg and OpenCV have comparable performance, with both significantly outperforming Pillow.
+
+Please note that the actual performance can vary based on the system and the specific images processed.
 
 ## Contributing
 
