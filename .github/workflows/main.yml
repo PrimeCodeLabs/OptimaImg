@@ -51,7 +51,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
-          python -m maturin develop
+          python -m maturin develop --release
           WHEEL_PATH=$(maturin develop --release | grep "Built wheel" | grep -oP '/tmp/.tmp\w+/optimaimg-[^ ]+.whl')
           python -m pip install $WHEEL_PATH
           python -m pip list  # List all installed packages to debug
