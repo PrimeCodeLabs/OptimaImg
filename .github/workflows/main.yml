@@ -14,31 +14,38 @@ env:
 
 jobs:
   tests:
-    name: "${{ matrix.os }}: Python ${{ matrix.python-version }}"
+    name: ${{ matrix.os }}: Python ${{ matrix.python-version }}
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
 
-    runs-on: "${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: "${{ matrix.python-version }}"
+          python-version: ${{ matrix.python-version }}
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           override: true
       - name: Set up virtual environment
-        run: python -m venv env
+        run: python -m venv venv
+
       - name: Activate virtual environment (Unix)
         if: runner.os != 'Windows'
-        run: source env/bin/activate
+        run: |
+          source venv/bin/activate
+          echo "VIRTUAL_ENV=$(pwd)/venv" >> $GITHUB_ENV
+
       - name: Activate virtual environment (Windows)
         if: runner.os == 'Windows'
-        run: .\env\Scripts\Activate.ps1
+        run: |
+          .\venv\Scripts\Activate
+          echo "VIRTUAL_ENV=$(pwd)\venv" | Out-String | Set-Content -Path $env:GITHUB_ENV -Encoding utf8
+
       - name: Install maturin
         run: pip install maturin==${{ env.MATURIN_VERSION }}
       - name: Build and install the package
@@ -63,7 +70,9 @@ jobs:
       - name: Set up virtual environment
         run: python -m venv venv
       - name: Activate virtual environment
-        run: source venv/bin/activate
+        run: |
+          source venv/bin/activate
+          echo "VIRTUAL_ENV=$(pwd)/venv" >> $GITHUB_ENV
       - name: Install Poetry
         run: pip install poetry
       - name: Install dependencies
