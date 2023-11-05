@@ -1,5 +1,5 @@
 [package]
-name = "optimaimg-rust"
+name = "optimaimg"
 version = "0.1.0"
 authors = ["Your Name <hamsa.a.j@gmail.com>"]
 edition = "2018"
