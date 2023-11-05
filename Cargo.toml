@@ -9,7 +9,7 @@ name = "optimaimg"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.14", features = ["extension-module"] }
+pyo3 = { version = "0.20.0", features = ["extension-module"] }
 image = "0.23.14" # For image processing capabilities
 
 # Optional dependencies for other image processing features can be added here
