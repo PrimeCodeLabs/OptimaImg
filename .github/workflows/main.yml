@@ -10,15 +10,15 @@ on:
 
 env:
   PYTHONFAULTHANDLER: "true"
-  MATURIN_VERSION: "1.3.1" # Updated to match your pyproject.toml
+  MATURIN_VERSION: "1.3.1"
 
 jobs:
   tests:
     name: "${{ matrix.os }}: Python ${{ matrix.python-version }}"
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"] # Updated to reflect your supported versions
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"] # Updated OS versions
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
 
     runs-on: "${{ matrix.os }}"
     steps:
@@ -31,10 +31,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - name: Install maturin
-        run: pip install maturin==${{ env.MATURIN_VERSION }}
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install maturin==${{ env.MATURIN_VERSION }}
       - name: Build and install the package
         run: maturin develop
       - name: Run tests
@@ -54,7 +52,11 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - name: Install maturin
-        run: pip install maturin==${{ env.MATURIN_VERSION }}
+      - name: Install Poetry
+        run: pip install poetry
+      - name: Install dependencies
+        run: poetry install
       - name: Build wheels and sdist
-        run: maturin publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+        run: poetry build
+      - name: Publish to PyPI
+        run: poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
