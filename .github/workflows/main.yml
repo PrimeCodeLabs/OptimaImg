@@ -48,11 +48,11 @@ jobs:
           echo "VIRTUAL_ENV=$(pwd)\venv" | Out-String | Set-Content -Path $env:GITHUB_ENV -Encoding utf8
 
       - name: Install maturin
-        run: pip install maturin==${{ env.MATURIN_VERSION }}
+        run: pip install maturin==${{ env.MATURIN_VERSION }} pytest
       - name: Build and install the package
         run: python -m maturin develop
       - name: Run tests
-        run: pytest
+        run: python -m pytest
 
   build-and-publish:
     needs: tests
