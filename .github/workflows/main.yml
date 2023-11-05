@@ -19,7 +19,7 @@ jobs:
       max-parallel: 2
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -52,6 +52,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
+          New-Item -ItemType Directory -Force -Path target/wheels
           python -m maturin build --release --out target/wheels
           $WHEEL_FILE = (Get-ChildItem target/wheels/*.whl).FullName
           python -m pip install $WHEEL_FILE
