@@ -55,6 +55,7 @@ jobs:
           WHEEL_FILE=$(ls target/wheels/*.whl)
           python -m pip install $WHEEL_FILE
           python -m pip list  # List all installed packages to debug
+        shell: bash
 
       - name: Run tests
         run: python -m pytest
