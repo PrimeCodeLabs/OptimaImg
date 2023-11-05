@@ -33,8 +33,12 @@ jobs:
           override: true
       - name: Set up virtual environment
         run: python -m venv venv
-      - name: Activate virtual environment
+      - name: Activate virtual environment (Unix)
+        if: runner.os != 'Windows'
         run: source venv/bin/activate
+      - name: Activate virtual environment (Windows)
+        if: runner.os == 'Windows'
+        run: .\venv\Scripts\Activate
       - name: Install maturin
         run: pip install maturin==${{ env.MATURIN_VERSION }}
       - name: Build and install the package
@@ -56,6 +60,10 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Set up virtual environment
+        run: python -m venv venv
+      - name: Activate virtual environment
+        run: source venv/bin/activate
       - name: Install Poetry
         run: pip install poetry
       - name: Install dependencies
