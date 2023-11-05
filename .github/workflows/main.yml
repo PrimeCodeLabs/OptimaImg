@@ -47,20 +47,16 @@ jobs:
           .\venv\Scripts\Activate
           echo "VIRTUAL_ENV=$(pwd)\venv" | Out-String | Set-Content -Path $env:GITHUB_ENV -Encoding utf8
 
-      - name: Install dependencies and build the package
+      - name: Install dependencies and build the package (Windows)
+        if: runner.os == 'Windows'
         run: |
           pip install --upgrade pip
           pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
           python -m maturin build --release --out target/wheels
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            WHEEL_FILE=$(Get-ChildItem target/wheels/*.whl | Select-Object -ExpandProperty FullName)
-          else
-            WHEEL_FILE=$(ls target/wheels/*.whl)
-          fi
+          $WHEEL_FILE = Get-ChildItem target/wheels/*.whl | Select-Object -ExpandProperty FullName
           python -m pip install $WHEEL_FILE
           python -m pip list  # List all installed packages to debug
         shell: pwsh
-        if: runner.os == 'Windows'
 
       - name: Install dependencies and build the package
         run: |
