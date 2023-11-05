@@ -53,7 +53,7 @@ jobs:
           pip install --upgrade pip
           pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
           python -m maturin build --release --out target/wheels
-          $WHEEL_FILE = Get-ChildItem target/wheels/*.whl | Select-Object -ExpandProperty FullName
+          $WHEEL_FILE = (Get-ChildItem target/wheels/*.whl).FullName
           python -m pip install $WHEEL_FILE
           python -m pip list  # List all installed packages to debug
         shell: pwsh
