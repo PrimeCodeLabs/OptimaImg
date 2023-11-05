@@ -32,17 +32,17 @@ jobs:
           toolchain: stable
           override: true
       - name: Set up virtual environment
-        run: python -m venv venv
+        run: python -m venv env
       - name: Activate virtual environment (Unix)
         if: runner.os != 'Windows'
-        run: source venv/bin/activate
+        run: source env/bin/activate
       - name: Activate virtual environment (Windows)
         if: runner.os == 'Windows'
-        run: .\venv\Scripts\Activate
+        run: .\env\Scripts\Activate.ps1
       - name: Install maturin
         run: pip install maturin==${{ env.MATURIN_VERSION }}
       - name: Build and install the package
-        run: maturin develop
+        run: python -m maturin develop
       - name: Run tests
         run: pytest
 
