@@ -14,4 +14,4 @@ pillow = "^10.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "maturin>=1.3.1"]
-build-backend = "maturin.build_backend"
+build-backend = "maturin"
