@@ -9,6 +9,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
 - Cross-platform support and optimization.
 - Convert images to grayscale.
 - Resize images to specified dimensions.
+- Rotate images by a specific rotation angle in degrees
 
 ## Installation
 
@@ -60,6 +61,21 @@ height = 100 # desired height
 
 # Resize the image and save it
 resize_image(input_path, output_path, width, height)
+```
+
+### Rotate an Image
+
+To rotate an image by a specific rotation angle in degrees, use the `rotate_image` function:
+
+```python
+from optimaimg import rotate_image
+
+input_path = 'path/to/your/image.jpg'
+output_path = 'path/to/save/resized_image.png'
+degree = 45 # desired degree
+
+# Rotate the image and save it
+rotate_image(input_path, output_path, degree)
 ```
 
 ## Benchmarks

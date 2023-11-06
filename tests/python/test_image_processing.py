@@ -2,7 +2,7 @@
 from pathlib import Path
 import pytest
 from PIL import Image
-from optimaimg import convert_to_grayscale, resize_image
+from optimaimg import convert_to_grayscale, resize_image, rotate_image
 
 
 # Helper function to create a simple colored image for testing
@@ -53,4 +53,23 @@ def test_resize_image(input_image_path, output_image_path):
     # Check that the output image has the expected dimensions
     assert output_image.size == (50, 50), "Output image has incorrect dimensions."
 
-    # Optionally, you can check the pixels of the output image to ensure it has been processed correctly
+
+def test_rotate_image(input_image_path, output_image_path):
+    # Call the rotate_image function with the test paths and a 90 degree rotation
+    rotate_image(input_image_path, output_image_path, 90)
+
+    # Check if the output file has been created
+    assert Path(output_image_path).is_file(), "Output image file was not created."
+
+    # Open the output image to check its properties
+    output_image = Image.open(output_image_path)
+    # Open the input image to compare
+    input_image = Image.open(input_image_path)
+
+    # Since we rotated by 90 degrees, the width of the input should match the height of the output and vice versa
+    assert (
+        input_image.size[0] == output_image.size[1]
+    ), "Output image width does not match input image height after rotation."
+    assert (
+        input_image.size[1] == output_image.size[0]
+    ), "Output image height does not match input image width after rotation."
