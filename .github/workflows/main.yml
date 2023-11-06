@@ -16,7 +16,7 @@ jobs:
   tests:
     name: "${{ matrix.os }}: Python ${{ matrix.python-version }}"
     strategy:
-      max-parallel: 2
+      max-parallel: 4
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
         os: ["ubuntu-latest", "macos-latest"]
@@ -98,7 +98,7 @@ jobs:
           pip install --upgrade pip
           pip install maturin
       - name: Build wheels with maturin
-        run: python -m maturin build --release --out target/wheels
+        run: python -m maturin build --release --strip --out target/wheels
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
