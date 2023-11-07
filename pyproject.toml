@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "optimaimg"
-version = "0.2.0"
+version = "0.2.1"
 description = "An image processing toolkit combining Python and Rust"
 authors = ["Hamsa Jama <hamsa.a.j@gmail.com>"]
 license = "MIT"

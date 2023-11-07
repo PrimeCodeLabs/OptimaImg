@@ -16,7 +16,7 @@ jobs:
   tests:
     name: "${{ matrix.os }}: Python ${{ matrix.python-version }}"
     strategy:
-      max-parallel: 4
+      max-parallel: 5
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
         os: ["ubuntu-latest", "macos-latest"]
@@ -106,5 +106,4 @@ jobs:
           path: target/wheels/*.whl
       - name: Publish to PyPI with maturin
         run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          maturin publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }} --release-tag $TAG_NAME
+          maturin publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
