@@ -10,9 +10,8 @@ use imageproc::{
     gradients::sobel_gradients,
     map::map_colors,
 };
-use pyo3::{prelude::*, exceptions::PyIOError};
-use pyo3::wrap_pyfunction;
-use std::{path::Path, convert::TryInto};
+use pyo3::{prelude::*, exceptions::PyIOError, exceptions::PyException, wrap_pyfunction};
+use std::{path::Path, convert::TryInto, sync::mpsc};
 use palette::{Hsv, Srgb, FromColor};
 
 const TRANSPARENT_COLOR: Rgba<u8> = Rgba([0, 0, 0, 0]);
@@ -38,6 +37,55 @@ fn resize_image(input_path: String, output_path: String, width: u32, height: u32
     let img = open_image(&input_path)?;
     let resized_img = img.resize_exact(width, height, FilterType::Lanczos3);
     save_image(&resized_img.to_rgba8(), &output_path, ImageFormat::Png)
+}
+
+
+#[pyfunction]
+fn batch_resize_images(input_paths: Vec<String>, output_path: String, width: u32, height: u32) -> PyResult<()> {
+    let (tx, rx) = mpsc::channel();
+
+    // Use standard threading to process images in parallel
+    input_paths.into_iter().enumerate().for_each(|(index, input_path)| {
+        let tx = tx.clone();
+        let output_path = output_path.clone(); // Clone output path for the move into the thread
+        std::thread::spawn(move || {
+            let result: Result<(), PyErr> = (|| {
+                let img = open(Path::new(&input_path))
+                    .map_err(|e| PyException::new_err(format!("Failed to open image: {}", e)))?;
+                let resized_img = img.resize_exact(width, height, FilterType::Lanczos3);
+                // Generate a unique filename for each output
+                let file_name = Path::new(&input_path).file_stem()
+                    .ok_or_else(|| PyException::new_err("Input path does not have a valid filename"))?
+                    .to_str()
+                    .ok_or_else(|| PyException::new_err("Failed to convert filename to string"))?;
+                let output_file_path = Path::new(&output_path).join(format!("{}_{}.png", file_name, index));
+                resized_img.save_with_format(output_file_path, ImageFormat::Png)
+                    .map_err(|e| PyException::new_err(format!("Failed to save image: {}", e)))?;
+                Ok(())
+            })();
+            tx.send(result).expect("Could not send over channel");
+        });
+    });
+
+    // Drop the original transmitter so the receiver will close after all threads are done
+    drop(tx);
+
+    // Collect errors
+    let mut errors: Vec<PyErr> = Vec::new();
+
+    // Collect the results
+    for received in rx {
+        if let Err(e) = received {
+            errors.push(e);
+        }
+    }
+
+    // If there were any errors, return the first one
+    if let Some(error) = errors.into_iter().next() {
+        return Err(error);
+    }
+
+    Ok(())
 }
 
 #[pyfunction]
@@ -227,6 +275,7 @@ fn optimaimg(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(adjust_contrast, m)?)?;
     m.add_function(wrap_pyfunction!(adjust_saturation, m)?)?;
     m.add_function(wrap_pyfunction!(adjust_hue, m)?)?;
+    m.add_function(wrap_pyfunction!(batch_resize_images, m)?)?;
 
     Ok(())
 }

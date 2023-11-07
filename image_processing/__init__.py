@@ -10,6 +10,7 @@ from .core import (
     adjust_contrast,
     adjust_saturation,
     adjust_hue,
+    batch_resize_images,
 )
 
 __version__ = "0.3.1"
@@ -26,4 +27,5 @@ __all__ = [
     "adjust_contrast",
     "adjust_saturation",
     "adjust_hue",
+    "batch_resize_images",
 ]

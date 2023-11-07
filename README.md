@@ -21,6 +21,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Adjust Brightness](#adjust-brightness)
     - [Adjust Contrast](#adjust-contrast)
     - [Adjust Hue](#adjust-hue)
+    - [Batch Resize Images](#batch-resize-images)
   - [Benchmarks](#benchmarks)
   - [Contributing](#contributing)
   - [License](#license)
@@ -210,6 +211,21 @@ hue = 1.2  # value > 1 increases contrast, value < 1 decreases contrast
 adjust_hue(input_path, output_path, hue)
 ```
 
+### Batch Resize Images
+
+Batch resize images to the specified dimensions:
+
+```python
+from optimaimg import batch_resize_images
+
+input_images_path = ["path/to/image1", "path/to/image2"]
+output_path = 'path/to/save/images/'
+width = 20
+height = 20
+
+batch_resize_images(input_images_path, output_path, width, height)
+```
+
 ## Benchmarks
 
 Below is a performance comparison table for converting images to grayscale using OptimaImg, Pillow, and OpenCV. The times are measured in seconds and represent the average duration taken to convert a single image across multiple runs.
@@ -231,11 +247,3 @@ Contributions are welcome! Please see `CONTRIBUTING.md` for details on how to co
 ## License
 
 OptimaImg is distributed under the MIT license. See `LICENSE` for more information.
-
-```
-
-```
-
-```
-
-```

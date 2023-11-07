@@ -1,3 +1,4 @@
+from typing import List
 from optimaimg import (
     convert_to_grayscale as _convert_to_grayscale,
     resize_image as _resize_image,
@@ -10,6 +11,7 @@ from optimaimg import (
     adjust_contrast as _adjust_contrast,
     adjust_saturation as _adjust_saturation,
     adjust_hue as _adjust_hue,
+    batch_resize_images as _batch_resize_images,
 )
 
 
@@ -173,3 +175,21 @@ def adjust_hue(input_path: str, output_path: str, hue: float) -> None:
     - None: The result of the Rust function, typically None if successful.
     """
     return _adjust_hue(input_path, output_path, hue)
+
+
+def batch_resize_images(
+    input_paths: List[str], output_path: str, width: int, height: int
+) -> None:
+    """
+    Batch resize images to the specified dimensions.
+
+    Parameters:
+    - input_paths (List[str]): A list of paths to the input images.
+    - output_path (str): The path where the resized images will be saved.
+    - width (int): The desired width of the images.
+    - height (int): The desired height of the images.
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _batch_resize_images(input_paths, output_path, width, height)
