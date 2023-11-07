@@ -12,7 +12,7 @@ from .core import (
     adjust_hue,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 __all__ = [
     "convert_to_grayscale",
