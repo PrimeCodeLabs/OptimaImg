@@ -98,12 +98,13 @@ jobs:
           pip install --upgrade pip
           pip install maturin
       - name: Build wheels with maturin
-        run: python -m maturin build --release --strip --out target/wheels
-
+        run: python -m maturin build --release --strip --out target/wheels/ -i python${{ matrix.python-version }}
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: wheels
+          name: wheels-${{ github.ref_name }}
           path: target/wheels/*.whl
       - name: Publish to PyPI with maturin
-        run: maturin publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          maturin publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }} --release-tag $TAG_NAME
