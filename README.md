@@ -17,6 +17,10 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Apply Sharpen](#apply-sharpen)
     - [Apply Edge Detection](#apply-edge-detection)
     - [Apply Sepia Filter](#apply-sepia-filter)
+    - [Adjust Saturation](#adjust-saturation)
+    - [Adjust Brightness](#adjust-brightness)
+    - [Adjust Contrast](#adjust-contrast)
+    - [Adjust Hue](#adjust-hue)
   - [Benchmarks](#benchmarks)
   - [Contributing](#contributing)
   - [License](#license)
@@ -33,6 +37,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
 - Sharpen images to enhance edges.
 - Detect edges within images using the Sobel operator.
 - Apply a sepia tone filter to images for a vintage effect.
+- Adjust the saturation of images to enhance or mute colors.
 
 ## Installation
 
@@ -145,6 +150,66 @@ from optimaimg import apply_sepia
 apply_sepia(input_path, output_path)
 ```
 
+### Adjust Saturation
+
+To adjust the saturation of an image, thereby enhancing or muting its colors, use the `adjust_saturation` function:
+
+```python
+from optimaimg import adjust_saturation
+
+input_path = 'path/to/your/image.jpg'
+output_path = 'path/to/save/saturation_adjusted_image.png'
+factor = 1.5  # factor > 1 increases saturation, factor < 1 decreases saturation
+
+# Adjust the saturation of the image and save it
+adjust_saturation(input_path, output_path, factor)
+```
+
+### Adjust Brightness
+
+To adjust the brightness of an image:
+
+```python
+from optimaimg import adjust_brightness
+
+input_path = 'path/to/your/image.jpg'
+output_path = 'path/to/save/brightness_adjusted_image.png'
+brightness = 1.2  # value > 1 increases brightness, value < 1 decreases brightness
+
+# Adjust the brightness of the image and save it
+adjust_brightness(input_path, output_path, brightness)
+```
+
+### Adjust Contrast
+
+To adjust the contrast of an image:
+
+```python
+from optimaimg import adjust_contrast
+
+input_path = 'path/to/your/image.jpg'
+output_path = 'path/to/save/contrast_adjusted_image.png'
+contrast = 1.2  # value > 1 increases contrast, value < 1 decreases contrast
+
+# Adjust the contrast of the image and save it
+adjust_contrast(input_path, output_path, contrast)
+```
+
+### Adjust Hue
+
+To adjust the contrast of an image:
+
+```python
+from optimaimg import adjust_contrast
+
+input_path = 'path/to/your/image.jpg'
+output_path = 'path/to/save/contrast_adjusted_image.png'
+hue = 1.2  # value > 1 increases contrast, value < 1 decreases contrast
+
+# Adjust the hue of the image and save it
+adjust_hue(input_path, output_path, hue)
+```
+
 ## Benchmarks
 
 Below is a performance comparison table for converting images to grayscale using OptimaImg, Pillow, and OpenCV. The times are measured in seconds and represent the average duration taken to convert a single image across multiple runs.
@@ -166,3 +231,11 @@ Contributions are welcome! Please see `CONTRIBUTING.md` for details on how to co
 ## License
 
 OptimaImg is distributed under the MIT license. See `LICENSE` for more information.
+
+```
+
+```
+
+```
+
+```

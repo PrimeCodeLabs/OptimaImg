@@ -1,6 +1,6 @@
 [package]
 name = "optimaimg"
-version = "0.2.3"
+version = "0.3.0"
 authors = ["Hamsa Jama <hamsa.a.j@gmail.com>"]
 edition = "2018"
 
@@ -12,5 +12,6 @@ crate-type = ["cdylib"]
 pyo3 = { version = "0.20.0", features = ["extension-module"] }
 image = "0.24.7" # For image processing capabilities
 imageproc = "0.23"
+palette = "0.6"
 
 # Optional dependencies for other image processing features can be added here

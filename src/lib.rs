@@ -1,7 +1,8 @@
 // Import necessary structs, traits, and functions from the image and imageproc crates
 use image::{
-    DynamicImage, ImageBuffer, ImageFormat, Luma, Rgba, RgbImage, Rgb, open,
-    imageops::FilterType
+    DynamicImage, ImageBuffer, ImageFormat, Luma, Rgba, RgbImage, Rgb, open, RgbaImage,
+    imageops::FilterType,
+    GenericImageView
 };
 use imageproc::{
     filter::gaussian_blur_f32,
@@ -12,6 +13,7 @@ use imageproc::{
 use pyo3::{prelude::*, exceptions::PyIOError};
 use pyo3::wrap_pyfunction;
 use std::{path::Path, convert::TryInto};
+use palette::{Hsv, Srgb, FromColor};
 
 const TRANSPARENT_COLOR: Rgba<u8> = Rgba([0, 0, 0, 0]);
 
@@ -147,6 +149,70 @@ fn apply_sepia(input_path: String, output_path: String) -> PyResult<()> {
     save_image(&sepia_image, &output_path, ImageFormat::Png)
 }
 
+// Function to adjust the brightness of an image
+// Increase brightness by adding to the pixel values
+#[pyfunction]
+fn adjust_brightness(input_path: String, output_path: String, value: i32) -> PyResult<()> {
+    let img = open_image(&input_path)?;
+    let adjusted_img = img.adjust_contrast(value as f32);
+    save_image(&adjusted_img.to_rgba8(), &output_path, ImageFormat::Png)
+}
+
+// Function to change the contrast of an image
+// Increase contrast by scaling pixel values to the power of the given factor
+#[pyfunction]
+fn adjust_contrast(input_path: String, output_path: String, factor: f32) -> PyResult<()> {
+    let img = open_image(&input_path)?;
+    let adjusted_img = img.adjust_contrast(factor);
+    save_image(&adjusted_img.to_rgba8(), &output_path, ImageFormat::Png)
+}
+
+fn get_saturated_image(input_img: &DynamicImage, factor: f32) -> RgbaImage {
+    let (width, height) = input_img.dimensions();
+    let mut output_img = RgbaImage::new(width, height);
+
+    for (x, y, image::Rgba(data)) in input_img.to_rgba8().enumerate_pixels() {
+        // Convert u8 values to f32 for palette operations (normalize to 0..1 range)
+        let srgb = Srgb::new(data[0] as f32 / 255.0, data[1] as f32 / 255.0, data[2] as f32 / 255.0);
+
+        // Convert to HSV color space
+        let hsv = Hsv::from_color(srgb);
+
+        // Adjust the saturation
+        let new_hsv = Hsv::new(hsv.hue, hsv.saturation * factor, hsv.value);
+
+        // Convert back to sRGB color space
+        let new_srgb = Srgb::from_color(new_hsv);
+
+        // Denormalize from 0..1 range to 0..255 range
+        let new_data = new_srgb.into_format::<u8>();
+
+
+        // Put the new pixel in the output image
+        output_img.put_pixel(x, y, Rgba([new_data.red, new_data.green as u8, new_data.blue as u8, data[3]]));
+    }
+
+    output_img
+}
+
+// Function to adjust the saturation of an image
+// Increase saturation by scaling the color components relative to the luminance
+#[pyfunction]
+fn adjust_saturation(input_path: String, output_path: String, factor: f32) -> PyResult<()> {
+    let img: DynamicImage = open_image(&input_path)?;
+    let adjusted_img = get_saturated_image(&img, factor);
+    save_image(&adjusted_img, &output_path, ImageFormat::Png)
+}
+
+// Function to adjust the hue of an image
+// Adjust hue by rotating the hue value of each pixel by the given degrees
+#[pyfunction]
+fn adjust_hue(input_path: String, output_path: String, degrees: i32) -> PyResult<()> {
+    let img = open_image(&input_path)?;
+    let adjusted_img = img.huerotate(degrees);
+    save_image(&adjusted_img.to_rgba8(), &output_path, ImageFormat::Png)
+}
+
 // Add all the pyfunctions to the Python module
 #[pymodule]
 fn optimaimg(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -157,5 +223,10 @@ fn optimaimg(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(apply_sharpen, m)?)?;
     m.add_function(wrap_pyfunction!(apply_edge_detection, m)?)?;
     m.add_function(wrap_pyfunction!(apply_sepia, m)?)?;
+    m.add_function(wrap_pyfunction!(adjust_brightness, m)?)?;
+    m.add_function(wrap_pyfunction!(adjust_contrast, m)?)?;
+    m.add_function(wrap_pyfunction!(adjust_saturation, m)?)?;
+    m.add_function(wrap_pyfunction!(adjust_hue, m)?)?;
+
     Ok(())
 }

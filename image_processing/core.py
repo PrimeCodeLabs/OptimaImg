@@ -6,6 +6,10 @@ from optimaimg import (
     apply_sharpen as _apply_sharpen,
     apply_edge_detection as _apply_edge_detection,
     apply_sepia as _apply_sepia,
+    adjust_brightness as _adjust_brightness,
+    adjust_contrast as _adjust_contrast,
+    adjust_saturation as _adjust_saturation,
+    adjust_hue as _adjust_hue,
 )
 
 
@@ -109,3 +113,63 @@ def apply_sepia(input_path: str, output_path: str) -> None:
     - None: The result of the Rust function, typically None if successful.
     """
     return _apply_sepia(input_path, output_path)
+
+
+def adjust_brightness(input_path: str, output_path: str, brightness: float) -> None:
+    """
+    Adjust the brightness of an image.
+
+    Parameters:
+    - input_path (str): The path to the input image.
+    - output_path (str): The path where the adjusted image will be saved.
+    - brightness (float): The amount to adjust the brightness by.
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _adjust_brightness(input_path, output_path, brightness)
+
+
+def adjust_contrast(input_path: str, output_path: str, contrast: float) -> None:
+    """
+    Adjust the contrast of an image.
+
+    Parameters:
+    - input_path (str): The path to the input image.
+    - output_path (str): The path where the adjusted image will be saved.
+    - contrast (float): The amount to adjust the contrast by.
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _adjust_contrast(input_path, output_path, contrast)
+
+
+def adjust_saturation(input_path: str, output_path: str, saturation: float) -> None:
+    """
+    Adjust the saturation of an image.
+
+    Parameters:
+    - input_path (str): The path to the input image.
+    - output_path (str): The path where the adjusted image will be saved.
+    - saturation (float): The amount to adjust the saturation by.
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _adjust_saturation(input_path, output_path, saturation)
+
+
+def adjust_hue(input_path: str, output_path: str, hue: float) -> None:
+    """
+    Adjust the hue of an image.
+
+    Parameters:
+    - input_path (str): The path to the input image.
+    - output_path (str): The path where the adjusted image will be saved.
+    - hue (float): The amount to adjust the hue by.
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _adjust_hue(input_path, output_path, hue)
