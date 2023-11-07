@@ -51,7 +51,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           pip install --upgrade pip
-          pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
+          pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest numpy
           New-Item -ItemType Directory -Force -Path target/wheels
           python -m maturin build --release --out target/wheels
           $WHEEL_FILE = (Get-ChildItem target/wheels/*.whl).FullName
@@ -62,7 +62,7 @@ jobs:
       - name: Install dependencies and build the package
         run: |
           pip install --upgrade pip
-          pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest
+          pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest numpy
           python -m maturin build --release --out target/wheels
           WHEEL_FILE=$(ls target/wheels/*.whl)
           python -m pip install $WHEEL_FILE
