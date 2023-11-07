@@ -1,14 +1,29 @@
-# tests/python/test_image_processing.py
 from pathlib import Path
 import pytest
 from PIL import Image
-from optimaimg import convert_to_grayscale, resize_image, rotate_image
+from .helpers import (
+    create_gradient_image,
+    create_test_image,
+    rms_difference,
+    some_threshold,
+)
+from optimaimg import (
+    convert_to_grayscale,
+    resize_image,
+    rotate_image,
+    apply_blur,
+    apply_sharpen,
+    apply_edge_detection,
+    apply_sepia,
+)
 
 
-# Helper function to create a simple colored image for testing
-def create_test_image(file_path, size=(100, 100), color=(255, 0, 0)):
-    image = Image.new("RGB", size, color)
-    image.save(file_path)
+# Define the tests
+@pytest.fixture
+def gradient_image_path(tmp_path):
+    output_path = tmp_path / "gradient.png"
+    create_gradient_image(100, 100, str(output_path))
+    return str(output_path)
 
 
 # Use pytest fixtures to manage test resources, like test images
@@ -73,3 +88,41 @@ def test_rotate_image(input_image_path, output_image_path):
     assert (
         input_image.size[1] == output_image.size[0]
     ), "Output image height does not match input image width after rotation."
+
+
+def test_apply_blur(gradient_image_path, output_image_path):
+    # Apply the blur function
+    apply_blur(gradient_image_path, output_image_path, sigma=2.0)
+
+    # Open the original and blurred images
+    original_image = Image.open(gradient_image_path)
+    blurred_image = Image.open(output_image_path)
+
+    # Calculate the RMS difference
+    rms_diff = rms_difference(original_image, blurred_image)
+
+    # Assert that the RMS difference is less than a threshold
+    assert (
+        rms_diff < some_threshold
+    ), "The blurred image is not significantly different from the original"
+
+
+def test_apply_sharpen(input_image_path, output_image_path):
+    # Apply the sharpen function
+    apply_sharpen(input_image_path, output_image_path)
+
+    assert Path(output_image_path).is_file(), "Output image file was not created."
+
+
+def test_apply_edge_detection(input_image_path, output_image_path):
+    # Apply the edge detection function
+    apply_edge_detection(input_image_path, output_image_path)
+
+    assert Path(output_image_path).is_file(), "Output image file was not created."
+
+
+def test_apply_sepia(input_image_path, output_image_path):
+    # Apply the sepia function
+    apply_sepia(input_image_path, output_image_path)
+
+    assert Path(output_image_path).is_file(), "Output image file was not created."

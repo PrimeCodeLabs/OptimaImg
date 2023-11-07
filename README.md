@@ -2,6 +2,25 @@
 
 OptimaImg is an image processing toolkit that leverages the performance of Rust with the ease of Python.
 
+## Table of Contents
+
+- [OptimaImg](#optimaimg)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Important Note](#important-note)
+  - [Usage](#usage)
+    - [Convert an Image to Grayscale](#convert-an-image-to-grayscale)
+    - [Resize an Image](#resize-an-image)
+    - [Rotate an Image](#rotate-an-image)
+    - [Apply Blur](#apply-blur)
+    - [Apply Sharpen](#apply-sharpen)
+    - [Apply Edge Detection](#apply-edge-detection)
+    - [Apply Sepia Filter](#apply-sepia-filter)
+  - [Benchmarks](#benchmarks)
+  - [Contributing](#contributing)
+  - [](#)
+
 ## Features
 
 - High-performance image operations written in Rust.
@@ -9,7 +28,11 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
 - Cross-platform support and optimization.
 - Convert images to grayscale.
 - Resize images to specified dimensions.
-- Rotate images by a specific rotation angle in degrees
+- Rotate images by a specific rotation angle in degrees.
+- Apply Gaussian blur to images.
+- Sharpen images to enhance edges.
+- Detect edges within images using the Sobel operator.
+- Apply a sepia tone filter to images for a vintage effect.
 
 ## Installation
 
@@ -71,11 +94,55 @@ To rotate an image by a specific rotation angle in degrees, use the `rotate_imag
 from optimaimg import rotate_image
 
 input_path = 'path/to/your/image.jpg'
-output_path = 'path/to/save/resized_image.png'
+output_path = 'path/to/save/rotated_image.png'
 degree = 45 # desired degree
 
 # Rotate the image and save it
 rotate_image(input_path, output_path, degree)
+```
+
+### Apply Blur
+
+To apply a Gaussian blur to an image:
+
+```python
+from optimaimg import apply_blur
+
+# Apply a blur with a sigma value of 2.0
+apply_blur(input_path, output_path, sigma=2.0)
+```
+
+### Apply Sharpen
+
+To sharpen an image:
+
+```python
+from optimaimg import apply_sharpen
+
+# Sharpen the image
+apply_sharpen(input_path, output_path)
+```
+
+### Apply Edge Detection
+
+To apply edge detection to an image:
+
+```python
+from optimaimg import apply_edge_detection
+
+# Detect edges in the image
+apply_edge_detection(input_path, output_path)
+```
+
+### Apply Sepia Filter
+
+To apply a sepia tone filter to an image:
+
+```python
+from optimaimg import apply_sepia
+
+# Apply a sepia tone filter
+apply_sepia(input_path, output_path)
 ```
 
 ## Benchmarks
@@ -96,6 +163,8 @@ Please note that the actual performance can vary based on the system and the spe
 
 Contributions are welcome! Please see `CONTRIBUTING.md` for details on how to contribute to the OptimaImg project.
 
-## License
+##
+
+License
 
 OptimaImg is distributed under the MIT license. See `LICENSE` for more information.
