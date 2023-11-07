@@ -45,6 +45,10 @@ def test_convert_to_grayscale(input_image_path, output_image_path):
     # Call the convert_to_grayscale function with the test paths
     convert_to_grayscale(input_image_path, output_image_path)
 
+    assert (
+        convert_to_grayscale.__doc__ is not None
+    ), "Docstring for 'convert_to_grayscale' is missing."
+
     # Check if the output file has been created
     assert Path(output_image_path).is_file(), "Output image file was not created."
 

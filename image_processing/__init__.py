@@ -1,4 +1,29 @@
-from .core import convert_to_grayscale, resize_image
+from .core import (
+    convert_to_grayscale,
+    resize_image,
+    rotate_image,
+    apply_blur,
+    apply_sharpen,
+    apply_edge_detection,
+    apply_sepia,
+    adjust_brightness,
+    adjust_contrast,
+    adjust_saturation,
+    adjust_hue,
+)
 
-# Define a version number
-__version__ = "0.2.3"
+__version__ = "0.3.0"
+
+__all__ = [
+    "convert_to_grayscale",
+    "resize_image",
+    "rotate_image",
+    "apply_blur",
+    "apply_sharpen",
+    "apply_edge_detection",
+    "apply_sepia",
+    "adjust_brightness",
+    "adjust_contrast",
+    "adjust_saturation",
+    "adjust_hue",
+]
