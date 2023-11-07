@@ -19,7 +19,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Apply Sepia Filter](#apply-sepia-filter)
   - [Benchmarks](#benchmarks)
   - [Contributing](#contributing)
-  - [](#)
+  - [License](#license)
 
 ## Features
 
@@ -163,8 +163,6 @@ Please note that the actual performance can vary based on the system and the spe
 
 Contributions are welcome! Please see `CONTRIBUTING.md` for details on how to contribute to the OptimaImg project.
 
-##
-
-License
+## License
 
 OptimaImg is distributed under the MIT license. See `LICENSE` for more information.
