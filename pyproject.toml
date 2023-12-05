@@ -2,7 +2,7 @@
 name = "optimaimg"
 version = "0.4.1"
 description = "An image processing toolkit combining Python and Rust"
-authors = ["Hamsa Jama <hamsa.a.j@gmail.com>"]
+authors = [{name = "Hamsa Jama", email = "hamsa.a.j@gmail.com"}]
 license = "MIT"
 classifiers = [
     "Development Status :: 3 - Alpha",
