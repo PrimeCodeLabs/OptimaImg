@@ -40,6 +40,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
 - Detect edges within images using the Sobel operator.
 - Apply a sepia tone filter to images for a vintage effect.
 - Adjust the saturation of images to enhance or mute colors.
+- Convert image color space.
 
 ## Installation
 

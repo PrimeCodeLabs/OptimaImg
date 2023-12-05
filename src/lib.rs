@@ -83,6 +83,14 @@ fn convert_image_color_space(image: &RgbImage, input_space: ColorSpace, output_s
     output_img
 }
 
+/// Convert an image from one color space to another
+/// - input_path: The path to the input image
+/// - output_path: The path to save the converted image
+/// - input_space: The color space of the input image
+/// - output_space: The color space to convert the image to
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: convert_color_space("input.png", "output.png", "rgb", "hsv")
 #[pyfunction]
 fn convert_color_space(input_path: String, output_path: String, input_space: String, output_space: String) -> PyResult<()> {
     let img = open_image(&input_path)?.to_rgb8();
@@ -93,6 +101,14 @@ fn convert_color_space(input_path: String, output_path: String, input_space: Str
     save_image(&converted_img, &output_path, ImageFormat::Png)
 }
 
+/// Resize an image to the given width and height
+/// - input_path: The path to the input image
+/// - output_path: The path to save the resized image
+/// - width: The width to resize the image to
+/// - height: The height to resize the image to
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: resize_image("input.png", "output.png", 100, 100)
 #[pyfunction]
 fn resize_image(input_path: String, output_path: String, width: u32, height: u32) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -100,7 +116,14 @@ fn resize_image(input_path: String, output_path: String, width: u32, height: u32
     save_image(&resized_img.to_rgba8(), &output_path, ImageFormat::Png)
 }
 
-
+/// Resize a batch of images to the given width and height
+/// - input_paths: A list of paths to the input images
+/// - output_path: The path to save the resized images
+/// - width: The width to resize the images to
+/// - height: The height to resize the images to
+/// - Returns: None
+/// - Raises: IOError if an input image could not be opened or an output image could not be saved
+/// - Example: batch_resize_images(["input1.png", "input2.png"], "output.png", 100, 100)
 #[pyfunction]
 fn batch_resize_images(input_paths: Vec<String>, output_path: String, width: u32, height: u32) -> PyResult<()> {
     let (tx, rx) = mpsc::channel();
@@ -149,12 +172,25 @@ fn batch_resize_images(input_paths: Vec<String>, output_path: String, width: u32
     Ok(())
 }
 
+/// Convert an image to grayscale
+/// - input_path: The path to the input image
+/// - output_path: The path to save the grayscale image
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: convert_to_grayscale("input.png", "output.png")
 #[pyfunction]
 fn convert_to_grayscale(input_path: String, output_path: String) -> PyResult<()> {
     let img = open_image(&input_path)?;
     save_image(&img.to_luma8(), &output_path, ImageFormat::Png)
 }
 
+/// Rotate an image by the given number of degrees
+/// - input_path: The path to the input image
+/// - output_path: The path to save the rotated image
+/// - degrees: The number of degrees to rotate the image by
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: rotate_image("input.png", "output.png", 90)
 #[pyfunction]
 fn rotate_image(input_path: String, output_path: String, degrees: f32) -> PyResult<()> {
     let dyn_img = open_image(&input_path)?;
@@ -164,6 +200,13 @@ fn rotate_image(input_path: String, output_path: String, degrees: f32) -> PyResu
     save_image(&rotated_img, &output_path, ImageFormat::Png)
 }
 
+/// Apply a Gaussian blur to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the blurred image
+/// - sigma: The standard deviation of the Gaussian blur
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: apply_blur("input.png", "output.png", 1.0)
 #[pyfunction]
 fn apply_blur(input_path: String, output_path: String, sigma: f32) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -213,6 +256,12 @@ fn apply_convolution(image: &RgbImage) -> RgbImage {
     output_image
 }
 
+/// Apply a sharpening filter to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the sharpened image
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: apply_sharpen("input.png", "output.png")
 #[pyfunction]
 fn apply_sharpen(input_path: String, output_path: String) -> PyResult<()> {
     let img = image::open(&input_path)
@@ -225,6 +274,12 @@ fn apply_sharpen(input_path: String, output_path: String) -> PyResult<()> {
     Ok(())
 }
 
+/// Apply an edge detection filter to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the edge detected image
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: apply_edge_detection("input.png", "output.png")
 #[pyfunction]
 fn apply_edge_detection(input_path: String, output_path: String) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -246,6 +301,12 @@ fn apply_edge_detection(input_path: String, output_path: String) -> PyResult<()>
     save_image(&edge_detected_image_u8, &output_path, ImageFormat::Png)
 }
 
+/// Apply a sepia filter to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the sepia image
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: apply_sepia("input.png", "output.png")
 #[pyfunction]
 fn apply_sepia(input_path: String, output_path: String) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -258,8 +319,13 @@ fn apply_sepia(input_path: String, output_path: String) -> PyResult<()> {
     save_image(&sepia_image, &output_path, ImageFormat::Png)
 }
 
-// Function to adjust the brightness of an image
-// Increase brightness by adding to the pixel values
+/// Apply a brightness adjustment to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the adjusted image
+/// - value: The amount to adjust the brightness by
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: adjust_brightness("input.png", "output.png", 50)
 #[pyfunction]
 fn adjust_brightness(input_path: String, output_path: String, value: i32) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -267,8 +333,13 @@ fn adjust_brightness(input_path: String, output_path: String, value: i32) -> PyR
     save_image(&adjusted_img.to_rgba8(), &output_path, ImageFormat::Png)
 }
 
-// Function to change the contrast of an image
-// Increase contrast by scaling pixel values to the power of the given factor
+/// Apply a contrast adjustment to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the adjusted image
+/// - factor: The amount to adjust the contrast by
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: adjust_contrast("input.png", "output.png", 1.5)
 #[pyfunction]
 fn adjust_contrast(input_path: String, output_path: String, factor: f32) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -304,8 +375,13 @@ fn get_saturated_image(input_img: &DynamicImage, factor: f32) -> RgbaImage {
     output_img
 }
 
-// Function to adjust the saturation of an image
-// Increase saturation by scaling the color components relative to the luminance
+/// Apply a saturation adjustment to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the adjusted image
+/// - factor: The amount to adjust the saturation by
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: adjust_saturation("input.png", "output.png", 1.5)
 #[pyfunction]
 fn adjust_saturation(input_path: String, output_path: String, factor: f32) -> PyResult<()> {
     let img: DynamicImage = open_image(&input_path)?;
@@ -313,8 +389,13 @@ fn adjust_saturation(input_path: String, output_path: String, factor: f32) -> Py
     save_image(&adjusted_img, &output_path, ImageFormat::Png)
 }
 
-// Function to adjust the hue of an image
-// Adjust hue by rotating the hue value of each pixel by the given degrees
+/// Apply a hue adjustment to an image
+/// - input_path: The path to the input image
+/// - output_path: The path to save the adjusted image
+/// - degrees: The number of degrees to adjust the hue by
+/// - Returns: None
+/// - Raises: IOError if the input image could not be opened or the output image could not be saved
+/// - Example: adjust_hue("input.png", "output.png", 90)
 #[pyfunction]
 fn adjust_hue(input_path: String, output_path: String, degrees: i32) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -322,7 +403,6 @@ fn adjust_hue(input_path: String, output_path: String, degrees: i32) -> PyResult
     save_image(&adjusted_img.to_rgba8(), &output_path, ImageFormat::Png)
 }
 
-// Add all the pyfunctions to the Python module
 #[pymodule]
 fn optimaimg(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(resize_image, m)?)?;
