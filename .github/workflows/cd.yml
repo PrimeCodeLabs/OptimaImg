@@ -1,0 +1,45 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - "*"
+
+env:
+  MATURIN_VERSION: "1.3.1"
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Set up virtual environment
+        run: python -m venv venv
+      - name: Activate virtual environment
+        run: |
+          source venv/bin/activate
+          echo "VIRTUAL_ENV=$(pwd)/venv" >> $GITHUB_ENV
+      - name: Install maturin
+        run: |
+          pip install --upgrade pip
+          pip install maturin==${{ env.MATURIN_VERSION }}
+      - name: Build wheels with maturin
+        run: python -m maturin build --release --strip --out target/wheels
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: target/wheels/*.whl
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.4.2
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
