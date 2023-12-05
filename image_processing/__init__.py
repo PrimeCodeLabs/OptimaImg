@@ -13,7 +13,7 @@ from .core import (
     batch_resize_images,
 )
 
-__version__ = "0.4.1"
+__version__ = "0.4.3"
 
 __all__ = [
     "convert_to_grayscale",
