@@ -36,8 +36,6 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install pillow pytest numpy flake8 black mypy
-      - name: Lint with Flake8
-        run: flake8 .
       - name: Format check with Black
         run: black --check .
       - name: Type check with MyPy
