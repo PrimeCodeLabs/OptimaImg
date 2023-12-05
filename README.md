@@ -23,7 +23,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Adjust Hue](#adjust-hue)
     - [Batch Resize Images](#batch-resize-images)
     - [Convert Image Color Space](#convert-image-color-space)
-  - [Benchmarks](#benchmarks)
+  - [Benchmark Results](#benchmark-results)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -241,19 +241,17 @@ output_path = 'path/to/save/converted_image.jpg'
 convert_color_space(input_path, output_path, 'rgb', 'hsv')
 ```
 
-## Benchmarks
+## Benchmark Results
 
-Below is a performance comparison table for converting images to grayscale using OptimaImg, Pillow, and OpenCV. The times are measured in seconds and represent the average duration taken to convert a single image across multiple runs.
+| Function  | Grayscale | Blur    | Rotate  |
+| --------- | --------- | ------- | ------- |
+| OptimaImg | 0.0207    | 0.05771 | 0.03338 |
+| OpenCV    | 0.04081   | 0.06736 | 0.07511 |
+| Pillow    | 0.17259   | 0.66545 | 0.45785 |
 
-| Library   | Average Conversion Time (seconds) |
-| --------- | --------------------------------- |
-| Pillow    | ~0.20                             |
-| OptimaImg | ~0.03                             |
-| OpenCV    | ~0.03                             |
+These benchmark results demonstrate that OptimaImg outperforms both OpenCV and Pillow, with a notably higher speed advantage over Pillow.
 
-These benchmarks indicate that OptimaImg and OpenCV have comparable performance, with both significantly outperforming Pillow.
-
-Please note that the actual performance can vary based on the system and the specific images processed.
+> Please note that the actual performance can vary based on the system and the specific images processed.
 
 ## Contributing
 
