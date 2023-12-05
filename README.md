@@ -22,6 +22,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Adjust Contrast](#adjust-contrast)
     - [Adjust Hue](#adjust-hue)
     - [Batch Resize Images](#batch-resize-images)
+    - [Convert Image Color Space](#convert-image-color-space)
   - [Benchmarks](#benchmarks)
   - [Contributing](#contributing)
   - [License](#license)
@@ -224,6 +225,20 @@ width = 20
 height = 20
 
 batch_resize_images(input_images_path, output_path, width, height)
+```
+
+### Convert Image Color Space
+
+Convert images between different color spaces such as HSV or RGB.
+
+```python
+from optimaimg import convert_color_space
+
+input_path = 'path/to/your/image.jpg'
+output_path = 'path/to/save/converted_image.jpg'
+
+# Convert the image color space from RGB to HSV
+convert_color_space(input_path, output_path, 'rgb', 'hsv')
 ```
 
 ## Benchmarks

@@ -11,9 +11,10 @@ from .core import (
     adjust_saturation,
     adjust_hue,
     batch_resize_images,
+    convert_color_space,
 )
 
-__version__ = "0.4.3"
+__version__ = "0.5.0"
 
 __all__ = [
     "convert_to_grayscale",
@@ -28,4 +29,5 @@ __all__ = [
     "adjust_saturation",
     "adjust_hue",
     "batch_resize_images",
+    "convert_color_space",
 ]

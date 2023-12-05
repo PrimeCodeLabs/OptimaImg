@@ -32,6 +32,67 @@ fn open_image(path: &str) -> PyResult<DynamicImage> {
         .map_err(|e| PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to open image: {}", e)))
 }
 
+enum ColorSpace {
+    Rgb,
+    Hsv,
+}
+
+impl ColorSpace {
+    fn from_str(s: &str) -> Result<ColorSpace, PyErr> {
+        match s.to_lowercase().as_str() {
+            "rgb" => Ok(ColorSpace::Rgb),
+            "hsv" => Ok(ColorSpace::Hsv),
+            _ => Err(PyErr::new::<pyo3::exceptions::PyValueError, _>("Invalid color space")),
+        }
+    }
+}
+
+fn convert_image_color_space(image: &RgbImage, input_space: ColorSpace, output_space: ColorSpace) -> RgbImage {
+    let (width, height) = image.dimensions();
+    let mut output_img = RgbImage::new(width, height);
+
+    for (x, y, rgb) in image.enumerate_pixels() {
+        let srgb = match input_space {
+            ColorSpace::Rgb => {
+                Srgb::new(rgb[0] as f32 / 255.0, rgb[1] as f32 / 255.0, rgb[2] as f32 / 255.0)
+            }
+            ColorSpace::Hsv => {
+                let hsv = Hsv::from_color(Srgb::new(rgb[0] as f32 / 255.0, rgb[1] as f32 / 255.0, rgb[2] as f32 / 255.0));
+                Srgb::from_color(hsv)
+            },
+        };
+
+        let final_rgb = match output_space {
+            ColorSpace::Rgb => srgb,
+            ColorSpace::Hsv => {
+                let hsv: Hsv = Hsv::from_color(srgb);
+                Srgb::from_color(hsv)
+            },
+        };
+
+        // Convert back to image::Rgb
+        let new_rgb = image::Rgb([
+            (final_rgb.red * 255.0) as u8,
+            (final_rgb.green * 255.0) as u8,
+            (final_rgb.blue * 255.0) as u8
+        ]);
+
+        output_img.put_pixel(x, y, new_rgb);
+    }
+
+    output_img
+}
+
+#[pyfunction]
+fn convert_color_space(input_path: String, output_path: String, input_space: String, output_space: String) -> PyResult<()> {
+    let img = open_image(&input_path)?.to_rgb8();
+    let input_space = ColorSpace::from_str(&input_space)?;
+    let output_space = ColorSpace::from_str(&output_space)?;
+
+    let converted_img = convert_image_color_space(&img, input_space, output_space);
+    save_image(&converted_img, &output_path, ImageFormat::Png)
+}
+
 #[pyfunction]
 fn resize_image(input_path: String, output_path: String, width: u32, height: u32) -> PyResult<()> {
     let img = open_image(&input_path)?;
@@ -276,6 +337,7 @@ fn optimaimg(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(adjust_saturation, m)?)?;
     m.add_function(wrap_pyfunction!(adjust_hue, m)?)?;
     m.add_function(wrap_pyfunction!(batch_resize_images, m)?)?;
+    m.add_function(wrap_pyfunction!(convert_color_space, m)?)?;
 
     Ok(())
 }

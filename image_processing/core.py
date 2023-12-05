@@ -12,6 +12,7 @@ from optimaimg import (
     adjust_saturation as _adjust_saturation,
     adjust_hue as _adjust_hue,
     batch_resize_images as _batch_resize_images,
+    convert_color_space as _convert_color_space,
 )
 
 
@@ -193,3 +194,21 @@ def batch_resize_images(
     - None: The result of the Rust function, typically None if successful.
     """
     return _batch_resize_images(input_paths, output_path, width, height)
+
+
+def convert_color_space(
+    input_path: str, output_path: str, input_space: str, output_space: str
+) -> None:
+    """
+    Convert an image from one color space to another.
+
+    Parameters:
+    - input_path (str): The path to the input image.
+    - output_path (str): The path where the converted image will be saved.
+    - input_space (str): The color space of the input image (e.g., "rgb" or "hsv").
+    - output_space (str): The desired color space for the output image (e.g., "rgb" or "hsv").
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _convert_color_space(input_path, output_path, input_space, output_space)
