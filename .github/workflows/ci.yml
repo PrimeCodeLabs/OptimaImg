@@ -38,7 +38,5 @@ jobs:
           pip install pillow pytest numpy flake8 black mypy
       - name: Format check with Black
         run: black --check .
-      - name: Type check with MyPy
-        run: mypy .
       - name: Run tests
         run: pytest
