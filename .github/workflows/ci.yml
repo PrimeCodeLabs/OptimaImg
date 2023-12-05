@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - "*"
     tags-ignore:
       - "*"
   pull_request:
@@ -12,6 +10,7 @@ on:
 
 env:
   PYTHONFAULTHANDLER: "true"
+  MATURIN_VERSION: "1.3.1"
 
 jobs:
   tests:
