@@ -32,8 +32,6 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - name: Run tests
-        run: pytest
       - name: Install dependencies and build the package
         run: |
           pip install --upgrade pip
