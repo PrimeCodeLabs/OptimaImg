@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    tags-ignore:
+      - "*"
+  pull_request:
+    branches:
+      - main
+
+env:
+  PYTHONFAULTHANDLER: "true"
+  MATURIN_VERSION: "1.3.1"
+
+jobs:
+  tests:
+    name: "${{ matrix.os }}: Python ${{ matrix.python-version }}"
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        os: ["ubuntu-latest", "macos-latest"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Install dependencies and build the package
+        run: |
+          pip install --upgrade pip
+          pip install pillow maturin==${{ env.MATURIN_VERSION }} pytest numpy black
+          python -m maturin build --release --out target/wheels
+          WHEEL_FILE=$(ls target/wheels/*.whl)
+          python -m pip install $WHEEL_FILE
+          python -m pip list  # List all installed packages to debug
+        shell: bash
+      - name: Format check with Black
+        run: black --check .
+      - name: Run tests
+        run: python -m pytest
