@@ -12,6 +12,7 @@ from .core import (
     adjust_hue,
     batch_resize_images,
     convert_color_space,
+    overlay_images,
 )
 
 __version__ = "0.5.11"
@@ -30,4 +31,5 @@ __all__ = [
     "adjust_hue",
     "batch_resize_images",
     "convert_color_space",
+    "overlay_images",
 ]

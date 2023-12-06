@@ -13,6 +13,7 @@ from optimaimg import (
     adjust_hue as _adjust_hue,
     batch_resize_images as _batch_resize_images,
     convert_color_space as _convert_color_space,
+    overlay_images as _overlay_images,
 )
 
 
@@ -212,3 +213,23 @@ def convert_color_space(
     - None: The result of the Rust function, typically None if successful.
     """
     return _convert_color_space(input_path, output_path, input_space, output_space)
+
+
+def overlay_images(
+    base_path: str, overlay_path: str, output_path: str, x: int, y: int, alpha: float
+) -> None:
+    """
+    Overlay an image onto another.
+
+    Parameters:
+    - base_path (str): The path to the base image.
+    - overlay_path (str): The path to the overlay image.
+    - output_path (str): The path where the composited image will be saved.
+    - x (int): The x-coordinate of the overlay position on the base image.
+    - y (int): The y-coordinate of the overlay position on the base image.
+    - alpha (float): The transparency of the overlay (0.0 to 1.0).
+
+    Returns:
+    - None: The result of the Rust function, typically None if successful.
+    """
+    return _overlay_images(base_path, overlay_path, output_path, x, y, alpha)

@@ -1,8 +1,7 @@
-// Import necessary structs, traits, and functions from the image and imageproc crates
 use image::{
     DynamicImage, ImageBuffer, ImageFormat, Luma, Rgba, RgbImage, Rgb, open, RgbaImage,
     imageops::FilterType,
-    GenericImageView
+    GenericImageView, PixelWithColorType, Pixel
 };
 use imageproc::{
     filter::gaussian_blur_f32,
@@ -13,25 +12,23 @@ use imageproc::{
 use pyo3::{prelude::*, exceptions::PyIOError, exceptions::PyException, wrap_pyfunction};
 use std::{path::Path, convert::TryInto, sync::mpsc};
 use palette::{Hsv, Srgb, FromColor};
-
+use image::io::Reader as ImageReader;
 const TRANSPARENT_COLOR: Rgba<u8> = Rgba([0, 0, 0, 0]);
 
-// Generic function to save any image buffer with a specified format
 fn save_image<T>(image: &ImageBuffer<T, Vec<u8>>, output_path: &str, image_format: ImageFormat) -> PyResult<()>
 where
-    T: image::Pixel<Subpixel = u8> + 'static + image::PixelWithColorType,
+    T: Pixel<Subpixel = u8> + PixelWithColorType + 'static,
 {
     image
         .save_with_format(output_path, image_format)
         .map_err(|e| PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to save image: {}", e)))
 }
 
-// Generic function to open an image from a file path
 fn open_image(path: &str) -> PyResult<DynamicImage> {
-    open(Path::new(path))
+    ImageReader::open(Path::new(path))?
+        .decode()
         .map_err(|e| PyErr::new::<pyo3::exceptions::PyIOError, _>(format!("Failed to open image: {}", e)))
 }
-
 enum ColorSpace {
     Rgb,
     Hsv,
@@ -46,6 +43,7 @@ impl ColorSpace {
         }
     }
 }
+
 
 fn convert_image_color_space(image: &RgbImage, input_space: ColorSpace, output_space: ColorSpace) -> RgbImage {
     let (width, height) = image.dimensions();
@@ -81,6 +79,38 @@ fn convert_image_color_space(image: &RgbImage, input_space: ColorSpace, output_s
     }
 
     output_img
+}
+
+/// Overlay an image onto another
+/// - base_path: Path to the base image
+/// - overlay_path: Path to the overlay image
+/// - output_path: Path to save the composited image
+/// - x: X-coordinate of the overlay position on the base image
+/// - y: Y-coordinate of the overlay position on the base image
+/// - alpha: Transparency of the overlay (0.0 to 1.0)
+#[pyfunction]
+fn overlay_images(base_path: String, overlay_path: String, output_path: String, x: u32, y: u32, alpha: f32) -> PyResult<()> {
+    let mut base_img = open_image(&base_path)?.to_rgba8();
+    let overlay_img = open_image(&overlay_path)?.to_rgba8();
+
+    for (overlay_x, overlay_y, pixel) in overlay_img.enumerate_pixels() {
+        let base_pixel = base_img.get_pixel_mut(x + overlay_x, y + overlay_y);
+        let blended_pixel = blend_pixels(*base_pixel, *pixel, alpha);
+        *base_pixel = blended_pixel;
+    }
+
+    save_image(&base_img, &output_path, ImageFormat::Png)
+}
+
+fn blend_pixels(base: Rgba<u8>, overlay: Rgba<u8>, alpha: f32) -> Rgba<u8> {
+    // Blend two pixels based on alpha
+    let blend = |base, overlay| ((1.0 - alpha) * base as f32 + alpha * overlay as f32) as u8;
+    Rgba([
+        blend(base[0], overlay[0]),
+        blend(base[1], overlay[1]),
+        blend(base[2], overlay[2]),
+        255, // Assuming the alpha channel of the base image is always 255 (fully opaque)
+    ])
 }
 
 /// Convert an image from one color space to another
@@ -151,20 +181,16 @@ fn batch_resize_images(input_paths: Vec<String>, output_path: String, width: u32
         });
     });
 
-    // Drop the original transmitter so the receiver will close after all threads are done
     drop(tx);
 
-    // Collect errors
     let mut errors: Vec<PyErr> = Vec::new();
 
-    // Collect the results
     for received in rx {
         if let Err(e) = received {
             errors.push(e);
         }
     }
 
-    // If there were any errors, return the first one
     if let Some(error) = errors.into_iter().next() {
         return Err(error);
     }
@@ -245,8 +271,6 @@ fn apply_convolution(image: &RgbImage) -> RgbImage {
             let g = g_total.clamp(0, 255) as u8;
             let b = b_total.clamp(0, 255) as u8;
  
- 
-            // Inside the loop
             let x_u32: u32 = x.try_into().expect("Index out of u32 bounds");
             let y_u32: u32 = y.try_into().expect("Index out of u32 bounds");
             output_image.put_pixel(x_u32, y_u32, Rgb([r, g, b]));
@@ -418,6 +442,6 @@ fn optimaimg(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(adjust_hue, m)?)?;
     m.add_function(wrap_pyfunction!(batch_resize_images, m)?)?;
     m.add_function(wrap_pyfunction!(convert_color_space, m)?)?;
-
+    m.add_function(wrap_pyfunction!(overlay_images, m)?)?;
     Ok(())
 }
