@@ -14,7 +14,7 @@ from .core import (
     convert_color_space,
 )
 
-__version__ = "0.5.1"
+__version__ = ""0.5.11""
 
 __all__ = [
     "convert_to_grayscale",
