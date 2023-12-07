@@ -15,7 +15,7 @@ from .core import (
     overlay_images,
 )
 
-__version__ = "0.5.11"
+__version__ = ""0.6.0""
 
 __all__ = [
     "convert_to_grayscale",
