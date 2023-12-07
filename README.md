@@ -253,9 +253,9 @@ from optimaimg import overlay_images
 input_path = 'path/to/your/image.jpg'
 overlay_path = 'path/to/your/overlay-image.jpg
 output_path = 'path/to/save/converted_image.jpg'
-x = 100
-y = 100
-alpha = 20
+x = 100  # The x-coordinate of the overlay position on the base image.
+y = 100 # The y-coordinate of the overlay position on the base image.
+alpha = 0.2 # The transparency of the overlay (0.0 to 1.0).
 
 overlay_images(inputh_path, overlay_path, output_path, x, y, alpha)
 ```
