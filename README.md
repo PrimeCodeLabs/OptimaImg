@@ -23,6 +23,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Adjust Hue](#adjust-hue)
     - [Batch Resize Images](#batch-resize-images)
     - [Convert Image Color Space](#convert-image-color-space)
+    - [Overlay images](#overlay-images)
   - [Benchmark Results](#benchmark-results)
   - [Contributing](#contributing)
   - [License](#license)
@@ -240,6 +241,22 @@ output_path = 'path/to/save/converted_image.jpg'
 
 # Convert the image color space from RGB to HSV
 convert_color_space(input_path, output_path, 'rgb', 'hsv')
+```
+
+### Overlay images
+
+Overlay an image onto another
+
+```python
+from optimaimg import overlay_images
+input_path = 'path/to/your/image.jpg'
+overlay_path = 'path/to/your/overlay-image.jpg
+output_path = 'path/to/save/converted_image.jpg'
+x = 100
+y = 100
+alpha = 20
+
+overlay_images(inputh_path, overlay_path, output_path, x, y, alpha)
 ```
 
 ## Benchmark Results
