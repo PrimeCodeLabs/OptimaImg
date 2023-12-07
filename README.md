@@ -249,6 +249,7 @@ Overlay an image onto another
 
 ```python
 from optimaimg import overlay_images
+
 input_path = 'path/to/your/image.jpg'
 overlay_path = 'path/to/your/overlay-image.jpg
 output_path = 'path/to/save/converted_image.jpg'
