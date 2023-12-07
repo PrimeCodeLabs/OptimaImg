@@ -1,6 +1,6 @@
 [package]
 name = "optimaimg"
-version = "0.5.11"
+version = ""0.6.0""
 authors = ["Hamsa Jama <hamsa.a.j@gmail.com>"]
 edition = "2018"
 
