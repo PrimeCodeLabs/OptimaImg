@@ -24,6 +24,7 @@ OptimaImg is an image processing toolkit that leverages the performance of Rust 
     - [Batch Resize Images](#batch-resize-images)
     - [Convert Image Color Space](#convert-image-color-space)
     - [Overlay images](#overlay-images)
+    - [CLI Usage Examples](#cli-usage-examples)
   - [Benchmark Results](#benchmark-results)
   - [Contributing](#contributing)
   - [License](#license)
@@ -260,6 +261,51 @@ alpha = 0.2 # The transparency of the overlay (0.0 to 1.0).
 overlay_images(inputh_path, overlay_path, output_path, x, y, alpha)
 ```
 
+### CLI Usage Examples
+
+- Convert an Image to Grayscale
+
+```bash
+optimaimg-cli grayscale path/to/input.jpg path/to/output.jpg
+```
+
+- Resize an Image
+
+```bash
+optimaimg-cli resize  path/to/input.jpg path/to/output.jpg 200 200
+```
+
+Options:
+
+```bash
+usage: optimaimg-cli [-h]
+                     resize, grayscale, rotate, blur, sharpen, edge_detection, sepia, brightness, contrast, saturation, hue, batch_resize,
+                     convert_color_space, overlay ...
+
+optimaimg CLI
+
+positional arguments:
+  resize, grayscale, rotate, blur, sharpen, edge_detection, sepia, brightness, contrast, saturation, hue, batch_resize, convert_color_space, overlay
+    resize              Resize an image
+    grayscale           Convert an image to grayscale
+    rotate              Rotate an image
+    blur                Apply blur to an image
+    sharpen             Sharpen an image
+    edge_detection      Apply edge detection to an image
+    sepia               Apply sepia tone to an image
+    brightness          Adjust the brightness of an image
+    contrast            Adjust the contrast of an image
+    saturation          Adjust the saturation of an image
+    hue                 Adjust the hue of an image
+    batch_resize        Batch resize images
+    convert_color_space
+                        Convert image color space
+    overlay             Overlay an image onto another
+
+options:
+  -h, --help            show this help message and exit
+```
+
 ## Benchmark Results
 
 | Function  | Grayscale | Blur    | Rotate  |
@@ -279,3 +325,7 @@ Contributions are welcome! Please see `CONTRIBUTING.md` for details on how to co
 ## License
 
 OptimaImg is distributed under the MIT license. See `LICENSE` for more information.
+
+```
+
+```
