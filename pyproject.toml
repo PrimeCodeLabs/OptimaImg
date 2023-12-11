@@ -1,6 +1,6 @@
 [project]
 name = "optimaimg"
-version = "0.6.0"
+version = "0.7.0"
 description = "An image processing toolkit combining Python and Rust"
 authors = [{name = "Hamsa Jama", email = "hamsa.a.j@gmail.com"}]
 license = "MIT"
@@ -24,3 +24,9 @@ classifiers = [
 [build-system]
 requires = ["poetry-core>=1.0.0", "maturin>=1.3.1"]
 build-backend = "maturin"
+
+[tool.maturin]
+python-packages = ["cli"]
+
+[project.scripts]
+optimaimg-cli = "cli.cli:main"
