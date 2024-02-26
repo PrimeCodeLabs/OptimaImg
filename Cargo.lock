@@ -450,9 +450,9 @@ dependencies = [
 
 [[package]]
 name = "palette"
-version = "0.7.3"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2e2f34147767aa758aa649415b50a69eeb46a67f9dc7db8011eeb3d84b351dc"
+checksum = "ebfc23a4b76642983d57e4ad00bb4504eb30a8ce3c70f4aee1f725610e36d97a"
 dependencies = [
  "approx",
  "fast-srgb8",
@@ -462,9 +462,9 @@ dependencies = [
 
 [[package]]
 name = "palette_derive"
-version = "0.7.3"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7db010ec5ff3d4385e4f133916faacd9dad0f6a09394c92d825b3aed310fa0a"
+checksum = "e8890702dbec0bad9116041ae586f84805b13eecd1d8b1df27c29998a9969d6d"
 dependencies = [
  "proc-macro2",
  "quote",
