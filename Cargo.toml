@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0.20.3", features = ["extension-module"] }
-image = "0.24.7" # For image processing capabilities
+image = "0.24.9" # For image processing capabilities
 imageproc = "0.23"
 palette = "0.7"
 
